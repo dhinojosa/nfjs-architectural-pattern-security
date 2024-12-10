@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Run mvn package') {
+
+            steps {
+                dir('sbom') {
+                   sh 'mvn package'
+                }
+            }
+        }
+
+        stage('dependencyTrackPublisher') {
+            steps {
+                dependencyTrackPublisher artifact: 'sbom/target/bom.xml', projectId: 'd98f251d-2b1d-4fd7-9375-979168790d5b', synchronous: true
+            }
+        }
+    }
+}

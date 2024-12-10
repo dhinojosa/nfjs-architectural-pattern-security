@@ -1,0 +1,29 @@
+
+### Good Login
+
+POST http://localhost:8000/login
+Content-Type: application/json
+
+{
+    "username": "user@example.com",
+    "password": "password123"
+}
+
+### Bad Login
+
+POST http://localhost:8000/login
+Content-Type: application/json
+
+{
+    "username": "user@example.com",
+    "password": "password1234"
+}
+
+### Get without token
+
+GET http://localhost:8000
+
+### Get with token provided with the first call
+
+GET http://localhost:8000
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzMzODE3ODIxLCJleHAiOjE3MzM4MjE0MjEsInJvbGVzIjpbImFkbWluIiwiZWRpdG9yIl19.vARnUs_GaxhVzplZ6CtForpIZI_UXBXQmvRcDqVk2_9zuNu-J_x3r1OaYBhwfrTJy-DT9KFmgw6tcP3Sm_YzAg

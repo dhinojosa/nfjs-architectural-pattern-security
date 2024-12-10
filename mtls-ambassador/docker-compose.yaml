@@ -1,0 +1,45 @@
+services:
+  service_a:
+    image: nginx:latest
+    networks:
+      - envoy_network
+    volumes:
+      - ./service_a/nginx.conf:/etc/nginx/nginx.conf
+      - ./service_a/html:/usr/share/nginx/html
+    depends_on:
+      - envoy_a
+
+  envoy_a:
+    image: envoyproxy/envoy:v1.22.0
+    volumes:
+      - ./envoy_a.yaml:/etc/envoy/envoy.yaml
+      - ./certs:/etc/envoy/certs
+    ports:
+      - "8080:8080"   # Optional: exposing for direct testing from the host
+      - "8443:8443"   # HTTPS mTLS endpoint to communicate with envoy_b
+    networks:
+      - envoy_network
+
+  service_b:
+    image: nginx:latest
+    networks:
+      - envoy_network
+    volumes:
+      - ./service_b/nginx.conf:/etc/nginx/nginx.conf
+      - ./service_b/html:/usr/share/nginx/html
+
+  envoy_b:
+    image: envoyproxy/envoy:v1.22.0
+    volumes:
+      - ./envoy_b.yaml:/etc/envoy/envoy.yaml   # Ensure this points to the correct path
+      - ./certs:/etc/envoy/certs
+    ports:
+      - "8444:8444"  # Optional: exposing for direct testing from the host
+    networks:
+      - envoy_network
+    depends_on:
+      - service_b
+
+networks:
+  envoy_network:
+    driver: bridge
